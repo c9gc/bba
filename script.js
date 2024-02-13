@@ -188,6 +188,9 @@ function endBattle() {
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
+  if (isButtonDisabled) return; // Prevent button spamming
+  isButtonDisabled = true; // Disable the button
+
   var attack = goatAttacks[attackIndex];
 
   // Check if the attack hits
@@ -198,9 +201,7 @@ function goatAttack(attackIndex) {
     if (zombieHealth < 0) {
       zombieHealth = 0; // Set the minimum value as 0
     }
-    updateHealth({
-      health: zombieHealth
-    }, zombieHealthElement, zombieHealthBarElement);
+    updateHealth({ health: zombieHealth }, zombieHealthElement, zombieHealthBarElement);
     updateMessageBubble(goatMessageElement, "Goat uses " + attack.name + "! " + attack.description);
     updateMessageBubble(zombieMessageElement, "Zombie takes " + attack.power + " damage!");
 
@@ -223,8 +224,12 @@ function goatAttack(attackIndex) {
     setTimeout(zombieAttack, 1000);
   }
 
-  goatAttackButton.disabled = false; // Enable the button for the next attack
+  // Enable the button after 3 seconds
+  setTimeout(function() {
+    isButtonDisabled = false;
+  }, 3000);
 }
+
 
 // Handles the zombie's attack
 function zombieAttack() {
