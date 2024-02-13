@@ -306,12 +306,26 @@ var restartButton = document.getElementById("restartButton");
 restartButton.addEventListener("click", resetGame);
 
 // Attach event listener to the goat's attack button
-document.getElementById("goatAttackButton").addEventListener("click", function() {
-  console.log("Attack button clicked");
-  if (!isButtonDisabled) {
-    goatAttack(document.getElementById("goat-attack-select").selectedIndex);
-  }
+goatAttackButton.addEventListener("click", function() {
+  var selectedIndex = selectAttack ? selectAttack.selectedIndex : 0;
+  goatAttack(selectedIndex);
 });
+
+// Create the select element for choosing the goat's attack
+var selectAttack = document.createElement("select");
+selectAttack.id = "goat-attack-select";
+
+// Create and append the options to the select element
+for (var i = 0; i < goatAttacks.length; i++) {
+  var option = document.createElement("option");
+  option.value = i;
+  option.text = goatAttacks[i].name;
+  selectAttack.appendChild(option);
+}
+
+// Append the select element to the battle button container
+document.querySelector(".battle-button-container").appendChild(selectAttack);
+
 
 
 
