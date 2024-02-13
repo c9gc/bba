@@ -184,10 +184,16 @@ function endBattle() {
       zombieImageElement.classList.add("spin");
     }, 2000);
   }
+
+  // Play game over sound
+  document.getElementById("gameOverSound").play();
 }
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
+  if (isButtonDisabled) return; // Prevent button spamming
+  isButtonDisabled = true; // Disable the button
+
   var attack = goatAttacks[attackIndex];
 
   // Check if the attack hits
@@ -214,6 +220,9 @@ function goatAttack(attackIndex) {
   } else {
     updateMessageBubble(goatMessageElement, "Goat's attack missed!");
     updateMessageBubble(zombieMessageElement, "Zombie dodged the attack!");
+
+    // Play missed attack sound
+    document.getElementById("missSound").play();
   }
 
   // Check if the battle is over
@@ -223,7 +232,10 @@ function goatAttack(attackIndex) {
     setTimeout(zombieAttack, 1000);
   }
 
-  goatAttackButton.disabled = false; // Enable the button for the next attack
+  // Enable the button after 1 second
+  setTimeout(function() {
+    isButtonDisabled = false;
+  }, 1000);
 }
 
 // Handles the zombie's attack
@@ -254,6 +266,9 @@ function zombieAttack() {
   } else {
     updateMessageBubble(zombieMessageElement, "Zombie's attack missed!");
     updateMessageBubble(goatMessageElement, "Goat dodged the attack!");
+
+    // Play missed attack sound
+    document.getElementById("missSound").play();
   }
 
   // Check if the battle is over
@@ -299,6 +314,9 @@ function resetGame() {
   // Hide the restart button
   var restartButton = document.getElementById("restartButton");
   restartButton.style.display = "none";
+
+  // Reset button spam prevention
+  isButtonDisabled = false;
 }
 
 // Event listener for the restart button
@@ -307,7 +325,6 @@ restartButton.addEventListener("click", resetGame);
 
 // Attach event listener to the goat's attack button
 goatAttackButton.addEventListener("click", function() {
-  goatAttackButton.disabled = true;
   goatAttack(selectAttack.selectedIndex);
 });
 
@@ -315,7 +332,7 @@ goatAttackButton.addEventListener("click", function() {
 var selectAttack = document.createElement("select");
 selectAttack.id = "goat-attack-select";
 
-// Create and append the option elements for each attack
+// Create and append the options to the select element
 for (var i = 0; i < goatAttacks.length; i++) {
   var option = document.createElement("option");
   option.value = i;
@@ -323,8 +340,17 @@ for (var i = 0; i < goatAttacks.length; i++) {
   selectAttack.appendChild(option);
 }
 
-// Append the select element to the goat's attack button container
-document.getElementById("goat-attack-button-container").appendChild(selectAttack);
+// Append the select element to the battle button container
+document.getElementsByClassName("battle-button-container")[0].appendChild(selectAttack);
 
-// Initialize the game state
-resetGame();
+// Update goat and zombie health bars and text
+updateHealth({
+  health: goatHealth
+}, goatHealthElement, goatHealthBarElement);
+updateHealth({
+  health: zombieHealth
+}, zombieHealthElement, zombieHealthBarElement);
+</script>
+</body>
+
+</html>
