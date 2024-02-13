@@ -1,9 +1,7 @@
-<script>
 // Game variables
 var goatHealth = 100;
 var zombieHealth = 100;
 var isButtonDisabled = false;
-var attackCooldown = false;
 
 // DOM elements
 var goatHealthElement = document.getElementById("goat-health");
@@ -14,7 +12,7 @@ var goatAttackButton = document.getElementById("goatAttackButton");
 
 var zombieHealthElement = document.getElementById("zombie-health");
 var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-var zombieImageElement = document.getElementsByClassName("zombie-image")[0];
+var zombieImageElement = document.getElementsByClassName("goat-image")[1];
 var zombieMessageElement = document.getElementById("zombie-message");
 
 // Attack objects
@@ -193,10 +191,8 @@ function endBattle() {
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
-  if (isButtonDisabled || attackCooldown) return; // Prevent button spam
-
-ming and attack cooldown
-  attackCooldown = true; // Set attack cooldown
+  if (isButtonDisabled) return; // Prevent button spamming
+  isButtonDisabled = true; // Disable the button
 
   var attack = goatAttacks[attackIndex];
 
@@ -236,9 +232,9 @@ ming and attack cooldown
     setTimeout(zombieAttack, 1000);
   }
 
-  // Set attack cooldown timer
+  // Enable the button after 1 second
   setTimeout(function() {
-    attackCooldown = false;
+    isButtonDisabled = false;
   }, 1000);
 }
 
@@ -319,9 +315,8 @@ function resetGame() {
   var restartButton = document.getElementById("restartButton");
   restartButton.style.display = "none";
 
-  // Reset button spam prevention and attack cooldown
+  // Reset button spam prevention
   isButtonDisabled = false;
-  attackCooldown = false;
 }
 
 // Event listener for the restart button
@@ -330,9 +325,7 @@ restartButton.addEventListener("click", resetGame);
 
 // Attach event listener to the goat's attack button
 goatAttackButton.addEventListener("click", function() {
-  if (!isButtonDisabled) {
-    goatAttack(document.getElementById("goat-attack-select").selectedIndex);
-  }
+  goatAttack(selectAttack.selectedIndex);
 });
 
 // Create the select element for choosing the goat's attack
