@@ -168,7 +168,7 @@ function endBattle() {
 
     // Delay changing the image to "rip.png" by 2 seconds
     setTimeout(function() {
-      goatImageElement.src = "/content/4c028270fd119363db95f75c8737c7b524cbf5dcb5350f467510266350ba58a6i0";
+      goatImageElement.src = "rip.png";
       goatImageElement.classList.add("spin");
     }, 2000);
   } else {
@@ -180,7 +180,7 @@ function endBattle() {
 
     // Delay changing the image to "rip.png" by 2 seconds
     setTimeout(function() {
-      zombieImageElement.src = "/content/4c028270fd119363db95f75c8737c7b524cbf5dcb5350f467510266350ba58a6i0";
+      zombieImageElement.src = "rip.png";
       zombieImageElement.classList.add("spin");
     }, 2000);
   }
@@ -281,13 +281,13 @@ function resetGame() {
   updateMessageBubble(zombieMessageElement, "");
 
   // Reset goat and zombie images
-  goatImageElement.src = "/content/78f4c160ca33b97020badcd80e2537250d33bc53f02722658733b09cc20e97c2i0";
+  goatImageElement.src = "goat.png";
   goatImageElement.classList.remove("loser-image");
   goatImageElement.classList.remove("spin");
   goatImageElement.classList.remove("shake");
   goatImageElement.classList.remove("flash");
 
-  zombieImageElement.src = "/content/8fdab2b2e975ecd928a8d71f301c06f23fc9d4404fbaa856dd0dd0bbb224cf94i0";
+  zombieImageElement.src = "zombie.png";
   zombieImageElement.classList.remove("loser-image");
   zombieImageElement.classList.remove("spin");
   zombieImageElement.classList.remove("shake");
