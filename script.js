@@ -1,4 +1,4 @@
-/ Game variables
+// Game variables
 var goatHealth = 100;
 var zombieHealth = 100;
 var isButtonDisabled = false;
