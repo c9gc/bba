@@ -224,11 +224,12 @@ function goatAttack(attackIndex) {
     setTimeout(zombieAttack, 1000);
   }
 
-  // Enable the button after 3 seconds
+  // Disable the button for 3 seconds
   setTimeout(function() {
     isButtonDisabled = false;
   }, 3000);
 }
+
 
 
 // Handles the zombie's attack
