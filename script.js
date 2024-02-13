@@ -330,7 +330,9 @@ restartButton.addEventListener("click", resetGame);
 
 // Attach event listener to the goat's attack button
 goatAttackButton.addEventListener("click", function() {
-  goatAttack(selectAttack.selectedIndex);
+  if (!isButtonDisabled) {
+    goatAttack(document.getElementById("goat-attack-select").selectedIndex);
+  }
 });
 
 // Create the select element for choosing the goat's attack
