@@ -1,7 +1,9 @@
+<script>
 // Game variables
 var goatHealth = 100;
 var zombieHealth = 100;
 var isButtonDisabled = false;
+var attackCooldown = false;
 
 // DOM elements
 var goatHealthElement = document.getElementById("goat-health");
@@ -12,7 +14,7 @@ var goatAttackButton = document.getElementById("goatAttackButton");
 
 var zombieHealthElement = document.getElementById("zombie-health");
 var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-var zombieImageElement = document.getElementsByClassName("goat-image")[1];
+var zombieImageElement = document.getElementsByClassName("zombie-image")[0];
 var zombieMessageElement = document.getElementById("zombie-message");
 
 // Attack objects
@@ -191,8 +193,10 @@ function endBattle() {
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
-  if (isButtonDisabled) return; // Prevent button spamming
-  isButtonDisabled = true; // Disable the button
+  if (isButtonDisabled || attackCooldown) return; // Prevent button spam
+
+ming and attack cooldown
+  attackCooldown = true; // Set attack cooldown
 
   var attack = goatAttacks[attackIndex];
 
@@ -232,9 +236,9 @@ function goatAttack(attackIndex) {
     setTimeout(zombieAttack, 1000);
   }
 
-  // Enable the button after 1 second
+  // Set attack cooldown timer
   setTimeout(function() {
-    isButtonDisabled = false;
+    attackCooldown = false;
   }, 1000);
 }
 
@@ -315,8 +319,9 @@ function resetGame() {
   var restartButton = document.getElementById("restartButton");
   restartButton.style.display = "none";
 
-  // Reset button spam prevention
+  // Reset button spam prevention and attack cooldown
   isButtonDisabled = false;
+  attackCooldown = false;
 }
 
 // Event listener for the restart button
