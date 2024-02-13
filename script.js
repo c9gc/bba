@@ -350,7 +350,5 @@ updateHealth({
 updateHealth({
   health: zombieHealth
 }, zombieHealthElement, zombieHealthBarElement);
-</script>
-</body>
 
-</html>
+
