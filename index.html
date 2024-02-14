@@ -234,57 +234,18 @@
 </div>
 <div class="container">
   <div class="game-container">
-    <div class="goat">
-      <img src="goat.png" class="goat-image" alt="Goat">
-      <div class="overlay goat-overlay"></div>
-      <p class="goat-name">Goat</p>
-      <div class="health-bar">
-        <div class="health-bar-inner" id="goat-health-bar"></div>
-      </div>
-      <p class="health-bar-text" id="goat-health">Health: 100</p>
-    </div>
-    <div class="zombie">
-      <img src="zombie.png" class="zombie-image" alt="Zombie">
-      <div class="overlay zombie-overlay"></div>
-      <p class="zombie-name">Zombie</p>
-      <div class="health-bar">
-        <div class="health-bar-inner" id="zombie-health-bar"></div>
-      </div>
-      <p class="health-bar-text" id="zombie-health">Health: 100</p>
-    </div>
+    <!-- Add your HTML content here -->
   </div>
 </div>
 <div class="message-container">
-  <div class="message goat-bubble" id="goat-message"></div>
-  <div class="message zombie-bubble" id="zombie-message"></div>
-</div>
-<div class="battle-button-container">
-  <button class="battle-button" id="battle-button">Start Battle</button>
+  <!-- Add your HTML content here -->
 </div>
 
 <script>
-// Game variables
-var goatHealth = 100;
-var zombieHealth = 100;
-var isButtonDisabled = false;
-var isPlayerTurn = true; // Track whose turn it is
-var isAttackInProgress = false; // Track whether an attack is in progress
-
-// DOM elements
-var goatHealthElement = document.getElementById("goat-health");
-var goatHealthBarElement = document.getElementById("goat-health-bar");
-var goatImageElement = document.getElementsByClassName("goat-image")[0];
-var goatMessageElement = document.getElementById("goat-message");
-var goatAttackButton = document.getElementById("battle-button");
-
-var zombieHealthElement = document.getElementById("zombie-health");
-var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-var zombieImageElement = document.getElementsByClassName("zombie-image")[0];
-var zombieMessageElement = document.getElementById("zombie-message");
-
-// Attack objects
+// JavaScript code
 // Goat's attacks
-var goatAttacks = [{
+var goatAttacks = [
+  {
     name: "BAAA Strike",
     power: 5,
     accuracy: 0.9,
@@ -317,7 +278,8 @@ var goatAttacks = [{
 ];
 
 // Zombie's attacks
-var zombieAttacks = [{
+var zombieAttacks = [
+  {
     name: "Bite",
     power: 3,
     accuracy: 0.9,
@@ -349,54 +311,27 @@ var zombieAttacks = [{
   }
 ];
 
-// Update goat image opacity based on goat health
-function updateGoatImageOpacity() {
-  var opacity = goatHealth / 100; // Adjust opacity based on goat health
-  goatImageElement.style.opacity = opacity.toFixed(2); // Set opacity value
+// Game variables
+var goatHealth = 100;
+var zombieHealth = 100;
+var isPlayerTurn = true; // Track whose turn it is
+var isAttackInProgress = false; // Track whether an attack is in progress
 
-  // Add flashing effect if health is below 50%
-  if (goatHealth < 50) {
-    goatImageElement.classList.add("flash");
-  } else {
-    goatImageElement.classList.remove("flash");
-  }
+// DOM elements
+var goatHealthElement = document.getElementById("goat-health");
+var goatHealthBarElement = document.getElementById("goat-health-bar");
+var goatImageElement = document.getElementsByClassName("goat-image")[0];
+var goatMessageElement = document.getElementById("goat-message");
 
-  // Reset opacity to 1 for loser image
-  if (goatHealth <= 0) {
-    goatImageElement.classList.add("loser-image");
-    goatImageElement.style.opacity = "1";
-  } else {
-    goatImageElement.classList.remove("loser-image");
-  }
-}
-
-// Update zombie image opacity based on zombie health
-function updateZombieImageOpacity() {
-  var opacity = zombieHealth / 100; // Adjust opacity based on zombie health
-  zombieImageElement.style.opacity = opacity.toFixed(2); // Set opacity value
-
-  // Add flashing effect if health is below 50%
-  if (zombieHealth < 50) {
-    zombieImageElement.classList.add("flash");
-  } else {
-    zombieImageElement.classList.remove("flash");
-  }
-
-  // Reset opacity to 1 for loser image
-  if (zombieHealth <= 0) {
-    zombieImageElement.classList.add("loser-image");
-    zombieImageElement.style.opacity = "1";
-  } else {
-    zombieImageElement.classList.remove("loser-image");
-  }
-}
+var zombieHealthElement = document.getElementById("zombie-health");
+var zombieHealthBarElement = document.getElementById("zombie-health-bar");
+var zombieImageElement = document.getElementsByClassName("zombie-image")[0];
+var zombieMessageElement = document.getElementById("zombie-message");
 
 // Function to update health text and health bar
 function updateHealth(character, healthElement, healthBarElement) {
   healthElement.textContent = "Health: " + character.health;
   healthBarElement.style.width = character.health + "%";
-  updateGoatImageOpacity(); // Update goat image opacity when health changes
-  updateZombieImageOpacity(); // Update zombie image opacity when health changes
 }
 
 // Function to update the message bubble
@@ -417,23 +352,15 @@ function isBattleOver() {
 
 // Function to end the battle and display the result
 function endBattle() {
-  goatAttackButton.disabled = true;
-
   if (goatHealth <= 0 && zombieHealth <= 0) {
     updateMessageBubble(goatMessageElement, "It's a draw!");
     updateMessageBubble(zombieMessageElement, "It's a draw!");
   } else if (goatHealth <= 0) {
     updateMessageBubble(goatMessageElement, "YOU LOSE!");
     updateMessageBubble(zombieMessageElement, "Zombie wins!");
-    goatImageElement.classList.add("loser-image");
-    goatImageElement.classList.remove("shake"); // Remove the shaking animation
-    goatImageElement.classList.remove("flash"); // Remove the flashing animation
   } else {
     updateMessageBubble(goatMessageElement, "YOU WIN!");
     updateMessageBubble(zombieMessageElement, "Zombie is defeated!");
-    zombieImageElement.classList.add("loser-image");
-    zombieImageElement.classList.remove("shake"); // Remove the shaking animation
-    zombieImageElement.classList.remove("flash"); // Remove the flashing animation
   }
 }
 
@@ -453,26 +380,19 @@ function goatAttack() {
     updateMessageBubble(goatMessageElement, "Goat uses " + attack.name + "! " + attack.description);
     updateMessageBubble(zombieMessageElement, "Zombie takes " + attack.power + " damage!");
 
-    // Shake the zombie image
-    zombieImageElement.classList.add("shake");
-
-    // Remove the shake effect after 1 second
-    setTimeout(function() {
-      zombieImageElement.classList.remove("shake");
-      if (!isBattleOver()) {
-        // If battle is not over, enable button for the next attack
-        goatAttackButton.disabled = false;
-        zombieAttack(); // Perform the zombie's attack automatically
-      } else {
-        endBattle(); // If battle is over, end the battle
-      }
-    }, 1000);
+    // Check if the battle is over after goat's attack
+    if (!isBattleOver()) {
+      // If battle is not over, perform the zombie's attack automatically
+      zombieAttack();
+    } else {
+      endBattle(); // If battle is over, end the battle
+    }
   } else {
-    updateMessageBubble(goatMessageElement, "Goat uses " + attack.name + "! But it missed!");
-    updateMessageBubble(zombieMessageElement, "Zombie dodges the attack!");
+    updateMessageBubble(goatMessageElement, "Goat's attack missed!");
+    updateMessageBubble(zombieMessageElement, "Zombie dodged the attack!");
 
-    // If the attack misses, enable button for the next attack
-    goatAttackButton.disabled = false;
+    // If the attack misses, end the battle
+    endBattle();
   }
 }
 
@@ -492,38 +412,25 @@ function zombieAttack() {
     updateMessageBubble(goatMessageElement, "Goat takes " + attack.power + " damage!");
     updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! " + attack.description);
 
-    // Shake the goat image
-    goatImageElement.classList.add("shake");
-
-    // Remove the shake effect after 1 second
-    setTimeout(function() {
-      goatImageElement.classList.remove("shake");
-      if (!isBattleOver()) {
-        // If battle is not over, continue the battle
-        goatAttackButton.disabled = false; // Enable button for the next attack
-      } else {
-        endBattle(); // If battle is over, end the battle
-      }
-    }, 1000);
+    // Check if the battle is over after zombie's attack
+    if (!isBattleOver()) {
+      isPlayerTurn = true; // Set player's turn after zombie's attack
+    } else {
+      endBattle(); // If battle is over, end the battle
+    }
   } else {
     updateMessageBubble(goatMessageElement, "Goat dodges the attack!");
-    updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! But it missed!");
+    updateMessageBubble(zombieMessageElement, "Zombie's attack missed!");
 
-    // If the attack misses, continue the battle
-    goatAttackButton.disabled = false;
+    // If the attack misses, end the battle
+    endBattle();
   }
 }
 
-// Event listener for battle button click
-goatAttackButton.addEventListener("click", function() {
-  // Check if an attack is in progress or if it's not the player's turn
-  if (!isAttackInProgress && isPlayerTurn) {
-    isAttackInProgress = true; // Set attack in progress to true
-    goatAttack(); // Perform the goat's attack
-    isPlayerTurn = false; // Set player's turn to false
-  }
-});
-
+// Call goatAttack() automatically when the page loads
+window.onload = function() {
+  goatAttack();
+};
 </script>
 
 </body>
