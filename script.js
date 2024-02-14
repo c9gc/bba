@@ -10,11 +10,11 @@ var goatHealthElement = document.getElementById("goat-health");
 var goatHealthBarElement = document.getElementById("goat-health-bar");
 var goatImageElement = document.getElementsByClassName("goat-image")[0];
 var goatMessageElement = document.getElementById("goat-message");
-var goatAttackButton = document.getElementById("goatAttackButton");
+var goatAttackButton = document.getElementById("battle-button"); // Changed to start battle button
 
 var zombieHealthElement = document.getElementById("zombie-health");
 var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-var zombieImageElement = document.getElementsByClassName("goat-image")[1];
+var zombieImageElement = document.getElementsByClassName("zombie-image")[0]; // Corrected the class name
 var zombieMessageElement = document.getElementById("zombie-message");
 
 // Attack objects
@@ -191,11 +191,11 @@ function endBattle() {
 }
 
 // Handles the goat's attack
-function goatAttack(attackIndex) {
+function goatAttack() {
   if (isAttackInProgress) return; // Check if an attack is already in progress
   isAttackInProgress = true; // Set attack in progress
 
-  var attack = goatAttacks[attackIndex];
+  var attack = getRandomAttack(goatAttacks);
 
   // Check if the attack hits
   var attackHits = Math.random() <= attack.accuracy;
@@ -327,28 +327,24 @@ function resetGame() {
 var restartButton = document.getElementById("restartButton");
 restartButton.addEventListener("click", resetGame);
 
-// Attach event listener to the goat's attack button
+// Event listener for the start battle button
 goatAttackButton.addEventListener("click", function() {
-  if (!goatAttackButton.disabled) { // Check if button is not disabled
-    var selectedAttackIndex = selectAttack.selectedIndex;
-    goatAttack(selectedAttackIndex);
+  if (!isButtonDisabled) { // Check if button is not disabled
+    // Randomly determine if the player or the zombie goes first
+    isPlayerTurn = Math.random() < 0.5;
+
+    // Perform the first attack based on who goes first
+    if (isPlayerTurn) {
+      goatAttack();
+    } else {
+      zombieAttack();
+    }
+
+    // Disable the start battle button after it's clicked
+    isButtonDisabled = true;
+    goatAttackButton.disabled = true;
   }
 });
-
-// Create the select element for choosing the goat's attack
-var selectAttack = document.createElement("select");
-selectAttack.id = "goat-attack-select";
-
-// Create and append the option elements for each attack
-for (var i = 0; i < goatAttacks.length; i++) {
-  var option = document.createElement("option");
-  option.value = i;
-  option.text = goatAttacks[i].name;
-  selectAttack.appendChild(option);
-}
-
-// Append the select element to the goat's attack button container
-document.getElementById("goat-attack-button-container").appendChild(selectAttack);
 
 // Initialize the game state
 resetGame();
