@@ -242,9 +242,7 @@ function zombieAttack() {
     if (goatHealth < 0) {
       goatHealth = 0; // Set the minimum value as 0
     }
-    updateHealth({
-      health: goatHealth
-    }, goatHealthElement, goatHealthBarElement);
+    updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
     updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! " + attack.description);
     updateMessageBubble(goatMessageElement, "Goat takes " + attack.power + " damage!");
 
@@ -264,7 +262,13 @@ function zombieAttack() {
   if (isBattleOver()) {
     endBattle();
   }
+
+  // Enable the button for the next attack after a cooldown period
+  setTimeout(function() {
+    isButtonDisabled = false;
+  }, 3000); // 3-second cooldown before the button becomes enabled again
 }
+
 
 // Function to reset the game state
 function resetGame() {
