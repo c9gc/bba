@@ -115,8 +115,50 @@
       color: #333333;
     }
 
+    .goat-bubble {
+      align-self: flex-end;
+    }
+
+    .zombie-bubble {
+      align-self: flex-start;
+    }
+
     .battle-button-container {
-      display: none; /* Hide the battle button container */
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .battle-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      background-color: #FF0000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .restart-button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .restart-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      background-color: #333333;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .restart-button:hover {
+      background-color: #555555;
     }
 
     .footer-container {
@@ -216,6 +258,9 @@
   <div class="message goat-bubble" id="goat-message"></div>
   <div class="message zombie-bubble" id="zombie-message"></div>
 </div>
+<div class="battle-button-container">
+  <button class="battle-button" id="battle-button">Start Battle</button>
+</div>
 
 <script>
 // Game variables
@@ -230,13 +275,14 @@ var goatHealthElement = document.getElementById("goat-health");
 var goatHealthBarElement = document.getElementById("goat-health-bar");
 var goatImageElement = document.getElementsByClassName("goat-image")[0];
 var goatMessageElement = document.getElementById("goat-message");
-var goatAttackButton = document.getElementById("goatAttackButton");
+var goatAttackButton = document.getElementById("battle-button");
 
 var zombieHealthElement = document.getElementById("zombie-health");
 var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-var zombieImageElement = document.getElementsByClassName("goat-image")[1];
+var zombieImageElement = document.getElementsByClassName("zombie-image")[0];
 var zombieMessageElement = document.getElementById("zombie-message");
 
+// Attack objects
 // Goat's attacks
 var goatAttacks = [{
     name: "BAAA Strike",
@@ -382,68 +428,18 @@ function endBattle() {
     goatImageElement.classList.add("loser-image");
     goatImageElement.classList.remove("shake"); // Remove the shaking animation
     goatImageElement.classList.remove("flash"); // Remove the flashing animation
-
-    // Delay changing the image to "rip.png" by 2 seconds
-    setTimeout(function() {
-      goatImageElement.src = "rip.png";
-      goatImageElement.classList.add("spin");
-    }, 1000);
   } else {
     updateMessageBubble(goatMessageElement, "YOU WIN!");
     updateMessageBubble(zombieMessageElement, "Zombie is defeated!");
     zombieImageElement.classList.add("loser-image");
     zombieImageElement.classList.remove("shake"); // Remove the shaking animation
     zombieImageElement.classList.remove("flash"); // Remove the flashing animation
-
-    // Delay changing the image to "rip.png" by 2 seconds
-    setTimeout(function() {
-      zombieImageElement.src = "rip.png";
-      zombieImageElement.classList.add("spin");
-    }, 1000);
   }
 }
 
-// Function to reset the game state
-function resetGame() {
-  // Reset goat and zombie health
-  goatHealth = 100;
-  zombieHealth = 100;
-
-  // Reset goat and zombie health elements
-  updateHealth({
-    health: goatHealth
-  }, goatHealthElement, goatHealthBarElement);
-  updateHealth({
-    health: zombieHealth
-  }, zombieHealthElement, zombieHealthBarElement);
-
-  // Reset message bubbles
-  updateMessageBubble(goatMessageElement, "");
-  updateMessageBubble(zombieMessageElement, "");
-
-  // Reset goat and zombie images
-  goatImageElement.src = "goat.png";
-  goatImageElement.classList.remove("loser-image");
-  goatImageElement.classList.remove("spin");
-  goatImageElement.classList.remove("shake");
-  goatImageElement.classList.remove("flash");
-
-  zombieImageElement.src = "zombie.png";
-  zombieImageElement.classList.remove("loser-image");
-  zombieImageElement.classList.remove("spin");
-  zombieImageElement.classList.remove("shake");
-  zombieImageElement.classList.remove("flash");
-
-  // Enable the goat attack button
-  goatAttackButton.disabled = false;
-}
-
 // Handles the goat's attack
-function goatAttack(attackIndex) {
-  if (isAttackInProgress) return; // Check if an attack is already in progress
-  isAttackInProgress = true; // Set attack in progress
-
-  var attack = goatAttacks[attackIndex];
+function goatAttack() {
+  var attack = getRandomAttack(goatAttacks);
 
   // Check if the attack hits
   var attackHits = Math.random() <= attack.accuracy;
@@ -463,35 +459,25 @@ function goatAttack(attackIndex) {
     // Remove the shake effect after 1 second
     setTimeout(function() {
       zombieImageElement.classList.remove("shake");
-      isAttackInProgress = false; // Reset attack in progress
       if (!isBattleOver()) {
         // If battle is not over, enable button for the next attack
         goatAttackButton.disabled = false;
-        zombieAttack(); // Perform zombie attack automatically
+        zombieAttack(); // Perform the zombie's attack automatically
+      } else {
+        endBattle(); // If battle is over, end the battle
       }
     }, 1000);
   } else {
-    updateMessageBubble(goatMessageElement, "Goat's attack missed!");
-    updateMessageBubble(zombieMessageElement, "Zombie dodged the attack!");
-    isAttackInProgress = false; // Reset attack in progress
-    if (!isBattleOver()) {
-      // If battle is not over, enable button for the next attack
-      goatAttackButton.disabled = false;
-      zombieAttack(); // Perform zombie attack automatically
-    }
-  }
+    updateMessageBubble(goatMessageElement, "Goat uses " + attack.name + "! But it missed!");
+    updateMessageBubble(zombieMessageElement, "Zombie dodges the attack!");
 
-  // Check if the battle is over
-  if (isBattleOver()) {
-    endBattle();
+    // If the attack misses, enable button for the next attack
+    goatAttackButton.disabled = false;
   }
 }
 
 // Handles the zombie's attack
 function zombieAttack() {
-  if (isAttackInProgress) return; // Check if an attack is already in progress
-  isAttackInProgress = true; // Set attack in progress
-
   var attack = getRandomAttack(zombieAttacks);
 
   // Check if the attack hits
@@ -503,8 +489,8 @@ function zombieAttack() {
       goatHealth = 0; // Set the minimum value as 0
     }
     updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
-    updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! " + attack.description);
     updateMessageBubble(goatMessageElement, "Goat takes " + attack.power + " damage!");
+    updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! " + attack.description);
 
     // Shake the goat image
     goatImageElement.classList.add("shake");
@@ -512,75 +498,31 @@ function zombieAttack() {
     // Remove the shake effect after 1 second
     setTimeout(function() {
       goatImageElement.classList.remove("shake");
-      isAttackInProgress = false; // Reset attack in progress
       if (!isBattleOver()) {
-        // If battle is not over, enable button for the next attack
-        goatAttackButton.disabled = false;
+        // If battle is not over, continue the battle
+        goatAttackButton.disabled = false; // Enable button for the next attack
+      } else {
+        endBattle(); // If battle is over, end the battle
       }
     }, 1000);
   } else {
-    updateMessageBubble(zombieMessageElement, "Zombie's attack missed!");
-    updateMessageBubble(goatMessageElement, "Goat dodged the attack!");
-    isAttackInProgress = false; // Reset attack in progress
-    if (!isBattleOver()) {
-      // If battle is not over, enable button for the next attack
-      goatAttackButton.disabled = false;
-    }
-  }
+    updateMessageBubble(goatMessageElement, "Goat dodges the attack!");
+    updateMessageBubble(zombieMessageElement, "Zombie uses " + attack.name + "! But it missed!");
 
-  // Check if the battle is over
-  if (isBattleOver()) {
-    endBattle();
+    // If the attack misses, continue the battle
+    goatAttackButton.disabled = false;
   }
 }
 
-// Function to reset the game state
-function resetGame() {
-  // Reset goat and zombie health
-  goatHealth = 100;
-  zombieHealth = 100;
-
-  // Reset goat and zombie health elements
-  updateHealth({
-    health: goatHealth
-  }, goatHealthElement, goatHealthBarElement);
-  updateHealth({
-    health: zombieHealth
-  }, zombieHealthElement, zombieHealthBarElement);
-
-  // Reset message bubbles
-  updateMessageBubble(goatMessageElement, "");
-  updateMessageBubble(zombieMessageElement, "");
-
-  // Reset goat and zombie images
-  goatImageElement.src = "goat.png";
-  goatImageElement.classList.remove("loser-image");
-  goatImageElement.classList.remove("spin");
-  goatImageElement.classList.remove("shake");
-  goatImageElement.classList.remove("flash");
-
-  zombieImageElement.src = "zombie.png";
-  zombieImageElement.classList.remove("loser-image");
-  zombieImageElement.classList.remove("spin");
-  zombieImageElement.classList.remove("shake");
-  zombieImageElement.classList.remove("flash");
-
-  // Enable the goat attack button
-  goatAttackButton.disabled = false;
-}
-
-// Function to initialize the game
-function initializeGame() {
-  // Set initial health values
-  updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
-  updateHealth({ health: zombieHealth }, zombieHealthElement, zombieHealthBarElement);
-
-  // Reset game state
-  resetGame();
-}
-
-// Initialize the game when the page loads
-window.onload = initializeGame;
+// Event listener for battle button click
+goatAttackButton.addEventListener("click", function() {
+  // Check if an attack is in progress or if it's not the player's turn
+  if (!isAttackInProgress && isPlayerTurn) {
+    isAttackInProgress = true; // Set attack in progress to true
+    goatAttack(); // Perform the goat's attack
+    isPlayerTurn = false; // Set player's turn to false
+  }
+});
 
 </script>
 
