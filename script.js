@@ -224,10 +224,14 @@ function goatAttack(attackIndex) {
   if (isBattleOver()) {
     endBattle();
   } else {
-    // Enable the button for the next attack
-    goatAttackButton.disabled = false;
+    // Zombie attacks after player's attack
+    setTimeout(zombieAttack, 1000);
   }
+
+  // Enable the button for the next attack
+  goatAttackButton.disabled = false;
 }
+
 
 
 // Handles the zombie's attack
