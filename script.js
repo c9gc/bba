@@ -224,10 +224,10 @@ function goatAttack(attackIndex) {
     setTimeout(zombieAttack, 1000);
   }
 
-  // Enable the button for the next attack
+  // Enable the button for the next attack after a cooldown period
   setTimeout(function() {
     isButtonDisabled = false;
-  }, 1000); // Re-enable the button regardless of the attack result
+  }, 3000); // 3-second cooldown before the button becomes enabled again
 }
 
 // Handles the zombie's attack
