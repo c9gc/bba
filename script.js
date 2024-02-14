@@ -232,8 +232,6 @@ function goatAttack(attackIndex) {
   goatAttackButton.disabled = false;
 }
 
-
-
 // Handles the zombie's attack
 function zombieAttack() {
   var attack = getRandomAttack(zombieAttacks);
