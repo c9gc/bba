@@ -3,6 +3,7 @@ var goatHealth = 100;
 var zombieHealth = 100;
 var isButtonDisabled = false;
 var isPlayerTurn = true; // Track whose turn it is
+var isAttackInProgress = false; // Track whether an attack is in progress
 
 // DOM elements
 var goatHealthElement = document.getElementById("goat-health");
@@ -18,7 +19,8 @@ var zombieMessageElement = document.getElementById("zombie-message");
 
 // Attack objects
 // Goat's attacks
-var goatAttacks = [{
+var goatAttacks = [
+  {
     name: "BAAA Strike",
     power: 5,
     accuracy: 0.9,
@@ -51,7 +53,8 @@ var goatAttacks = [{
 ];
 
 // Zombie's attacks
-var zombieAttacks = [{
+var zombieAttacks = [
+  {
     name: "Bite",
     power: 3,
     accuracy: 0.9,
@@ -189,6 +192,9 @@ function endBattle() {
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
+  if (isAttackInProgress) return; // Check if an attack is already in progress
+  isAttackInProgress = true; // Set attack in progress
+
   var attack = goatAttacks[attackIndex];
 
   // Check if the attack hits
@@ -209,24 +215,33 @@ function goatAttack(attackIndex) {
     // Remove the shake effect after 1 second
     setTimeout(function() {
       zombieImageElement.classList.remove("shake");
+      isAttackInProgress = false; // Reset attack in progress
+      if (!isBattleOver()) {
+        // If battle is not over, enable button for the next attack
+        goatAttackButton.disabled = false;
+      }
     }, 1000);
   } else {
     updateMessageBubble(goatMessageElement, "Goat's attack missed!");
     updateMessageBubble(zombieMessageElement, "Zombie dodged the attack!");
+    isAttackInProgress = false; // Reset attack in progress
+    if (!isBattleOver()) {
+      // If battle is not over, enable button for the next attack
+      goatAttackButton.disabled = false;
+    }
   }
 
   // Check if the battle is over
   if (isBattleOver()) {
     endBattle();
-  } else {
-    // Enable the button for the next attack
-    goatAttackButton.disabled = false;
   }
 }
 
-
 // Handles the zombie's attack
 function zombieAttack() {
+  if (isAttackInProgress) return; // Check if an attack is already in progress
+  isAttackInProgress = true; // Set attack in progress
+
   var attack = getRandomAttack(zombieAttacks);
 
   // Check if the attack hits
@@ -247,21 +262,27 @@ function zombieAttack() {
     // Remove the shake effect after 1 second
     setTimeout(function() {
       goatImageElement.classList.remove("shake");
+      isAttackInProgress = false; // Reset attack in progress
+      if (!isBattleOver()) {
+        // If battle is not over, enable button for the next attack
+        goatAttackButton.disabled = false;
+      }
     }, 1000);
   } else {
     updateMessageBubble(zombieMessageElement, "Zombie's attack missed!");
     updateMessageBubble(goatMessageElement, "Goat dodged the attack!");
+    isAttackInProgress = false; // Reset attack in progress
+    if (!isBattleOver()) {
+      // If battle is not over, enable button for the next attack
+      goatAttackButton.disabled = false;
+    }
   }
 
   // Check if the battle is over
   if (isBattleOver()) {
     endBattle();
-  } else {
-    // Enable the button for the player's next attack
-    goatAttackButton.disabled = false;
   }
 }
-
 
 // Function to reset the game state
 function resetGame() {
@@ -306,11 +327,11 @@ function resetGame() {
 var restartButton = document.getElementById("restartButton");
 restartButton.addEventListener("click", resetGame);
 
-// Event listener for the attack button
+// Attach event listener to the goat's attack button
 goatAttackButton.addEventListener("click", function() {
   if (!goatAttackButton.disabled) { // Check if button is not disabled
     var selectedAttackIndex = selectAttack.selectedIndex;
-    handleAttack(selectedAttackIndex);
+    goatAttack(selectedAttackIndex);
   }
 });
 
