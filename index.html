@@ -5,306 +5,294 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Goat vs Zombie</title>
 <style>
-    /* CSS styles */
-    body {
-      background-color: rgb(255, 72, 0);
-      font-family: "Arial", sans-serif;
-    }
+/* CSS styles */
+#game-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
 
-    .game-title {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-top: 50px;
-    }
+.health-bar {
+  background-color: green;
+  height: 20px;
+  width: 100%;
+  margin-bottom: 5px;
+}
 
-    .container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-top: 50px;
-    }
+.message-bubble {
+  border: 1px solid black;
+  padding: 5px;
+  width: 200px;
+  margin: 10px 0;
+}
 
-    .game-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-top: 50px;
-      background-color: rgb(241, 130, 3);
-      /* Set the background color to white */
-    }
+.goat-image, .zombie-image {
+  max-width: 100px;
+}
 
-    .goat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0 20px;
-      position: relative;
-    }
+.flash {
+  animation: flash-animation 0.5s alternate infinite;
+}
 
-    .goat-image {
-      width: 160px;
-      height: 160px;
-      opacity: 1;
-      /* Set initial opacity */
-      transition: opacity 0.3s ease;
-      /* Add transition effect */
-    }
+@keyframes flash-animation {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
 
-    .zombie-image {
-      width: 160px;
-      height: 160px;
-      opacity: 1;
-      /* Set initial opacity */
-      transition: opacity 0.3s ease;
-      /* Add transition effect */
-    }
+.shake {
+  animation: shake-animation 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+@keyframes shake-animation {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
 
-    .goat-name {
-      margin-top: 10px;
-      font-size: 20px;
-      text-align: center;
-      color: #c70000;
-    }
+.spin {
+  animation: spin-animation 2s linear infinite;
+}
 
-    .health-bar {
-      width: 200px;
-      height: 20px;
-      background-color: #EEEEEE;
-      border: 1px solid #AAAAAA;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
-    .health-bar-inner {
-      height: 100%;
-      background-color: #FF0000;
-    }
+.loser-image {
+  opacity: 1 !important;
+}
 
-    .health-bar-text {
-      margin-top: 5px;
-      font-size: 14px;
-      color: #333333;
-    }
-
-    .message-container {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .message {
-      width: 400px;
-      padding: 10px;
-      background-color: #FFFFFF;
-      border: 1px solid #AAAAAA;
-      border-radius: 5px;
-      font-size: 14px;
-      text-align: center;
-      color: #333333;
-    }
-
-    .goat-bubble {
-      align-self: flex-end;
-    }
-
-    .zombie-bubble {
-      align-self: flex-start;
-    }
-
-    .battle-button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .battle-button {
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #FFFFFF;
-      background-color: #FF0000;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .restart-button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .restart-button {
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #FFFFFF;
-      background-color: #333333;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .restart-button:hover {
-      background-color: #555555;
-    }
-
-    .footer-container {
-      text-align: center;
-    }
-
-    .shake {
-      animation: shake 0.5s;
-    }
-
-    @keyframes shake {
-      0% {
-        transform: translateX(0);
-      }
-
-      25% {
-        transform: translateX(-5px);
-      }
-
-      50% {
-        transform: translateX(5px);
-      }
-
-      75% {
-        transform: translateX(-5px);
-      }
-
-      100% {
-        transform: translateX(0);
-      }
-    }
-
-    .flash {
-      animation: flashAnimation 0.5s infinite alternate;
-    }
-
-    @keyframes flashAnimation {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0.5;
-      }
-    }
-
-    .loser-image {
-      filter: grayscale(100%) sepia(100%) hue-rotate(200deg) brightness(0.8);
-      /* Add any other styles you want to apply to the losing image */
-    }
-
-    .spin {
-      animation: spin 2s linear infinite;
-      /* Adjust the animation duration and timing as needed */
-    }
-
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
+#attack-button-container {
+  margin-top: 20px;
+}
 </style>
 </head>
 <body>
 
 <!-- HTML content for the game UI -->
-<div class="game-title">
-  <h1>Goat vs Zombie</h1>
-</div>
-<div class="container">
-  <div class="game-container">
-    <div class="goat">
-      <img src="goat.png" class="goat-image" alt="Goat">
-      <div class="overlay goat-overlay"></div>
-      <p class="goat-name">Goat</p>
-      <div class="health-bar">
-        <div class="health-bar-inner" id="goat-health-bar"></div>
-      </div>
-      <p class="health-bar-text" id="goat-health">Health: 100</p>
-    </div>
-    <div class="zombie">
-      <img src="zombie.png" class="zombie-image" alt="Zombie">
-      <div class="overlay zombie-overlay"></div>
-      <p class="zombie-name">Zombie</p>
-      <div class="health-bar">
-        <div class="health-bar-inner" id="zombie-health-bar"></div>
-      </div>
-      <p class="health-bar-text" id="zombie-health">Health: 100</p>
-    </div>
+<div id="game-container">
+  <div id="goat-container">
+    <img src="goat.png" class="goat-image" alt="Goat">
+    <div id="goat-health-bar" class="health-bar"></div>
+    <p id="goat-health" class="health-text">Health: 100</p>
+    <p id="goat-message" class="message-bubble"></p>
+  </div>
+  <div id="zombie-container">
+    <img src="zombie.png" class="zombie-image" alt="Zombie">
+    <div id="zombie-health-bar" class="health-bar"></div>
+    <p id="zombie-health" class="health-text">Health: 100</p>
+    <p id="zombie-message" class="message-bubble"></p>
   </div>
 </div>
-<div class="message-container">
-  <div class="message goat-bubble" id="goat-message"></div>
-  <div class="message zombie-bubble" id="zombie-message"></div>
+<div id="attack-button-container">
+  <button id="attack-button">Attack!</button>
 </div>
-<div class="battle-button-container">
-  <button class="battle-button" id="battle-button">Start Battle</button>
-</div>
+
 <script>
-  // Function to simulate a battle round
-  function simulateRound() {
-    var goatAttackPower = Math.floor(Math.random() * 10) + 1; // Random attack power between 1 and 10
-    var zombieAttackPower = Math.floor(Math.random() * 10) + 1; // Random attack power between 1 and 10
+// JavaScript code
+// Game variables
+var goatHealth = 100;
+var zombieHealth = 100;
 
-    // Goat attacks first
-    zombieHealth -= goatAttackPower;
-    document.getElementById("zombie-health").textContent = "Health: " + zombieHealth;
-    document.getElementById("zombie-health-bar").style.width = zombieHealth + "%";
-    document.getElementById("goat-message").textContent = "Goat attacks with power " + goatAttackPower + "!";
-    document.getElementById("zombie-message").textContent = "Zombie takes " + goatAttackPower + " damage!";
+// DOM elements
+var goatHealthElement = document.getElementById("goat-health");
+var goatHealthBarElement = document.getElementById("goat-health-bar");
+var goatMessageElement = document.getElementById("goat-message");
 
-    if (zombieHealth <= 0) {
-      document.getElementById("goat-message").textContent = "Goat wins!";
-      document.getElementById("zombie-message").textContent = "Zombie is defeated!";
-      document.getElementById("battle-button").disabled = true;
-    } else {
-      // Zombie attacks back if it's still alive
-      goatHealth -= zombieAttackPower;
-      document.getElementById("goat-health").textContent = "Health: " + goatHealth;
-      document.getElementById("goat-health-bar").style.width = goatHealth + "%";
-      document.getElementById("zombie-message").textContent = "Zombie counter-attacks with power " + zombieAttackPower + "!";
-      document.getElementById("goat-message").textContent = "Goat takes " + zombieAttackPower + " damage!";
+var zombieHealthElement = document.getElementById("zombie-health");
+var zombieHealthBarElement = document.getElementById("zombie-health-bar");
+var zombieMessageElement = document.getElementById("zombie-message");
 
-      if (goatHealth <= 0) {
-        document.getElementById("goat-message").textContent = "Goat is defeated!";
-        document.getElementById("zombie-message").textContent = "Zombie wins!";
-        document.getElementById("battle-button").disabled = true;
-      }
-    }
+// Goat's attacks
+var goatAttacks = [
+  {
+    name: "BAAA Strike",
+    power: 5,
+    accuracy: 0.9,
+    description: "Unleashes a powerful BAAA strike."
+  },
+  {
+    name: "Head Butt",
+    power: 3,
+    accuracy: 0.8,
+    description: "Charges forward and headbutts opponent."
+  },
+  {
+    name: "Horn Blade",
+    power: 9,
+    accuracy: 0.4,
+    description: "Slashes with sharp and pointy horns."
+  },
+  {
+    name: "Milk Jet",
+    power: 7,
+    accuracy: 0.9,
+    description: "Rushes with a high-speed milk jet."
+  },
+  {
+    name: "Horn Slam",
+    power: 15,
+    accuracy: 0.5,
+    description: "Picks up opponent with horns and throws them in the air."
   }
+];
 
-  // Event listener for the "Start Battle" button
-  document.getElementById("battle-button").addEventListener("click", function() {
-    this.disabled = true; // Disable the button to prevent multiple clicks
-    var battleInterval = setInterval(function() {
-      if (goatHealth <= 0 || zombieHealth <= 0) {
-        clearInterval(battleInterval);
+// Zombie's attacks
+var zombieAttacks = [
+  {
+    name: "Bite",
+    power: 3,
+    accuracy: 0.9,
+    description: "Stuns opponent with toxic zombie bite."
+  },
+  {
+    name: "Zombie Puke",
+    power: 9,
+    accuracy: 0.4,
+    description: "Spits poisonous vomit on opponent."
+  },
+  {
+    name: "Hoof Stomp",
+    power: 5,
+    accuracy: 0.7,
+    description: "Stomps the opponent with strong hooves."
+  },
+  {
+    name: "Milk Gun",
+    power: 15,
+    accuracy: 0.5,
+    description: "Shoots acidic spoiled milk at the opponent."
+  },
+  {
+    name: "Tackle",
+    power: 6,
+    accuracy: 0.9,
+    description: "Charges forward to tackle the opponent."
+  }
+];
+
+// Function to update health text and health bar
+function updateHealth(character, healthElement, healthBarElement) {
+  healthElement.textContent = "Health: " + character.health;
+  healthBarElement.style.width = character.health + "%";
+}
+
+// Function to update the message bubble
+function updateMessageBubble(messageElement, message) {
+  messageElement.textContent = message;
+}
+
+// Function to handle goat's attack
+function goatAttack() {
+  var attackIndex = Math.floor(Math.random() * goatAttacks.length);
+  var attack = goatAttacks[attackIndex];
+  var damage = Math.floor(Math.random() * attack.power) + 1; // Random damage between 1 and attack power
+  var hit = Math.random() <= attack.accuracy; // Check if the attack hits
+
+  if (hit) {
+    zombieHealth -= damage;
+    if (zombieHealth < 0) {
+      zombieHealth = 0; // Ensure health doesn't go below 0
+    }
+    updateHealth({ health: zombieHealth }, zombieHealthElement, zombieHealthBarElement);
+    updateMessageBubble(goatMessageElement, "Goat attacks with " + attack.name + " and hits for " + damage + " damage!");
+    checkBattleStatus();
+  } else {
+    updateMessageBubble(goatMessageElement, "Goat attacks with " + attack.name + " but misses!");
+    checkBattleStatus();
+  }
+}
+
+// Function to handle zombie's attack
+function zombieAttack() {
+  var attackIndex = Math.floor(Math.random() * zombieAttacks.length);
+  var attack = zombieAttacks[attackIndex];
+  var damage = Math.floor(Math.random() * attack.power) + 1; // Random damage between 1 and attack power
+  var hit = Math.random() <= attack.accuracy; // Check if the attack hits
+
+  if (hit) {
+    goatHealth -= damage;
+    if (goatHealth < 0) {
+      goatHealth = 0; // Ensure health doesn't go below 0
+    }
+    updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
+    updateMessageBubble(zombieMessageElement, "Zombie attacks with " + attack.name + " and hits for " + damage + " damage!");
+    checkBattleStatus();
+  } else {
+    updateMessageBubble(zombieMessageElement, "Zombie attacks with " + attack.name + " but misses!");
+    checkBattleStatus();
+  }
+}
+
+// Function to check the battle status
+function checkBattleStatus() {
+  if (goatHealth <= 0) {
+    updateMessageBubble(goatMessageElement, "Goat has been defeated!");
+    updateMessageBubble(zombieMessageElement, "Zombie wins!");
+    disableAttacks();
+  } else if (zombieHealth <= 0) {
+    updateMessageBubble(goatMessageElement, "Zombie has been defeated!");
+    updateMessageBubble(zombieMessageElement, "Goat wins!");
+    disableAttacks();
+  } else {
+    setTimeout(function() {
+      if (Math.random() < 0.5) {
+        goatAttack();
       } else {
-        simulateRound();
+        zombieAttack();
       }
-    }, 1000);
-  });
+    }, 1000); // Delay between attacks
+  }
+}
+
+// Function to disable further attacks
+function disableAttacks() {
+  document.getElementById("attack-button").disabled = true;
+}
+
+// Initialize the game
+updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
+updateHealth({ health: zombieHealth }, zombieHealthElement, zombieHealthBarElement);
+setTimeout(goatAttack, 1000); // Start with goat's attack after 1 second
 </script>
+
 </body>
 </html>
