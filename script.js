@@ -2,6 +2,7 @@
 var goatHealth = 100;
 var zombieHealth = 100;
 var isButtonDisabled = false;
+var isPlayerTurn = true; // Track whose turn it is
 
 // DOM elements
 var goatHealthElement = document.getElementById("goat-health");
@@ -218,13 +219,11 @@ function goatAttack(attackIndex) {
   if (isBattleOver()) {
     endBattle();
   } else {
-    // Zombie attacks after player's attack
-    setTimeout(zombieAttack, 1000);
+    // Enable the button for the next attack
+    goatAttackButton.disabled = false;
   }
-
-  // Enable the button for the next attack
-  goatAttackButton.disabled = false;
 }
+
 
 // Handles the zombie's attack
 function zombieAttack() {
@@ -262,6 +261,7 @@ function zombieAttack() {
     goatAttackButton.disabled = false;
   }
 }
+
 
 // Function to reset the game state
 function resetGame() {
@@ -306,10 +306,12 @@ function resetGame() {
 var restartButton = document.getElementById("restartButton");
 restartButton.addEventListener("click", resetGame);
 
-// Attach event listener to the goat's attack button
+// Event listener for the attack button
 goatAttackButton.addEventListener("click", function() {
-  goatAttackButton.disabled = true;
-  goatAttack(selectAttack.selectedIndex);
+  if (!goatAttackButton.disabled) { // Check if button is not disabled
+    var selectedAttackIndex = selectAttack.selectedIndex;
+    handleAttack(selectedAttackIndex);
+  }
 });
 
 // Create the select element for choosing the goat's attack
