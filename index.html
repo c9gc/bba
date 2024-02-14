@@ -224,7 +224,7 @@
         transform: rotate(360deg);
       }
     }
-  </style>
+</style>
 </head>
 <body>
 
@@ -261,32 +261,7 @@
 <div class="battle-button-container">
   <button class="battle-button" id="battle-button">Start Battle</button>
 </div>
-
 <script>
-// JavaScript code
-document.getElementById("battle-button").addEventListener("click", function() {
-  var goatHealth = 100;
-  var zombieHealth = 100;
-
-  var goatHealthElement = document.getElementById("goat-health");
-  var goatHealthBarElement = document.getElementById("goat-health-bar");
-  var goatMessageElement = document.getElementById("goat-message");
-
-  var zombieHealthElement = document.getElementById("zombie-health");
-  var zombieHealthBarElement = document.getElementById("zombie-health-bar");
-  var zombieMessageElement = document.getElementById("zombie-message");
-
-  // Function to update health text and health bar
-  function updateHealth(character, healthElement, healthBarElement) {
-    healthElement.textContent = "Health: " + character.health;
-    healthBarElement.style.width = character.health + "%";
-  }
-
-  // Function to update the message bubble
-  function updateMessageBubble(messageElement, message) {
-    messageElement.textContent = message;
-  }
-
   // Function to simulate a battle round
   function simulateRound() {
     var goatAttackPower = Math.floor(Math.random() * 10) + 1; // Random attack power between 1 and 10
@@ -294,39 +269,42 @@ document.getElementById("battle-button").addEventListener("click", function() {
 
     // Goat attacks first
     zombieHealth -= goatAttackPower;
-    updateHealth({ health: zombieHealth }, zombieHealthElement, zombieHealthBarElement);
-    updateMessageBubble(goatMessageElement, "Goat attacks with power " + goatAttackPower + "!");
-    updateMessageBubble(zombieMessageElement, "Zombie takes " + goatAttackPower + " damage!");
+    document.getElementById("zombie-health").textContent = "Health: " + zombieHealth;
+    document.getElementById("zombie-health-bar").style.width = zombieHealth + "%";
+    document.getElementById("goat-message").textContent = "Goat attacks with power " + goatAttackPower + "!";
+    document.getElementById("zombie-message").textContent = "Zombie takes " + goatAttackPower + " damage!";
 
     if (zombieHealth <= 0) {
-      updateMessageBubble(goatMessageElement, "Goat wins!");
-      updateMessageBubble(zombieMessageElement, "Zombie is defeated!");
+      document.getElementById("goat-message").textContent = "Goat wins!";
+      document.getElementById("zombie-message").textContent = "Zombie is defeated!";
       document.getElementById("battle-button").disabled = true;
     } else {
       // Zombie attacks back if it's still alive
       goatHealth -= zombieAttackPower;
-      updateHealth({ health: goatHealth }, goatHealthElement, goatHealthBarElement);
-      updateMessageBubble(zombieMessageElement, "Zombie counter-attacks with power " + zombieAttackPower + "!");
-      updateMessageBubble(goatMessageElement, "Goat takes " + zombieAttackPower + " damage!");
+      document.getElementById("goat-health").textContent = "Health: " + goatHealth;
+      document.getElementById("goat-health-bar").style.width = goatHealth + "%";
+      document.getElementById("zombie-message").textContent = "Zombie counter-attacks with power " + zombieAttackPower + "!";
+      document.getElementById("goat-message").textContent = "Goat takes " + zombieAttackPower + " damage!";
 
       if (goatHealth <= 0) {
-        updateMessageBubble(goatMessageElement, "Goat is defeated!");
-        updateMessageBubble(zombieMessageElement, "Zombie wins!");
+        document.getElementById("goat-message").textContent = "Goat is defeated!";
+        document.getElementById("zombie-message").textContent = "Zombie wins!";
         document.getElementById("battle-button").disabled = true;
       }
     }
   }
 
-  // Simulate battle rounds every second until one of the fighters is defeated
-  var battleInterval = setInterval(function() {
-    if (goatHealth <= 0 || zombieHealth <= 0) {
-      clearInterval(battleInterval);
-    } else {
-      simulateRound();
-    }
-  }, 1000);
-});
+  // Event listener for the "Start Battle" button
+  document.getElementById("battle-button").addEventListener("click", function() {
+    this.disabled = true; // Disable the button to prevent multiple clicks
+    var battleInterval = setInterval(function() {
+      if (goatHealth <= 0 || zombieHealth <= 0) {
+        clearInterval(battleInterval);
+      } else {
+        simulateRound();
+      }
+    }, 1000);
+  });
 </script>
-
 </body>
 </html>
