@@ -186,6 +186,12 @@ function endBattle() {
   }
 }
 
+// Attach event listener to the goat's attack button
+goatAttackButton.addEventListener("click", function() {
+  goatAttackButton.disabled = true; // Disable the button initially
+  goatAttack(selectAttack.selectedIndex);
+});
+
 // Handles the goat's attack
 function goatAttack(attackIndex) {
   var attack = goatAttacks[attackIndex];
