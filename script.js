@@ -261,12 +261,10 @@ function zombieAttack() {
   // Check if the battle is over
   if (isBattleOver()) {
     endBattle();
+  } else {
+    // Enable the button for the player's next attack
+    goatAttackButton.disabled = false;
   }
-
-  // Enable the button for the next attack after a cooldown period
-  setTimeout(function() {
-    isButtonDisabled = false;
-  }, 3000); // 3-second cooldown before the button becomes enabled again
 }
 
 
