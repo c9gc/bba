@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Goat vs Zombie</title>
 <style>
-/* Add your CSS styles here */
+/* CSS styles */
+#game-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+
 .health-bar {
   background-color: green;
   height: 20px;
@@ -40,6 +46,7 @@
 </div>
 
 <script>
+// JavaScript code
 // Game variables
 var goatHealth = 100;
 var zombieHealth = 100;
@@ -148,7 +155,7 @@ function goatAttack() {
     updateMessageBubble(goatMessageElement, "Goat attacks with " + attack.name + " and hits for " + damage + " damage!");
     checkBattleStatus();
   } else {
-    updateMessageBubble(goatMessageElement, "Goat's attack with " + attack.name + " missed!");
+    updateMessageBubble(goatMessageElement, "Goat attacks with " + attack.name + " but misses!");
     checkBattleStatus();
   }
 }
@@ -169,7 +176,7 @@ function zombieAttack() {
     updateMessageBubble(zombieMessageElement, "Zombie attacks with " + attack.name + " and hits for " + damage + " damage!");
     checkBattleStatus();
   } else {
-    updateMessageBubble(zombieMessageElement, "Zombie's attack with " + attack.name + " missed!");
+    updateMessageBubble(zombieMessageElement, "Zombie attacks with " + attack.name + " but misses!");
     checkBattleStatus();
   }
 }
@@ -177,25 +184,27 @@ function zombieAttack() {
 // Function to check the battle status
 function checkBattleStatus() {
   if (goatHealth <= 0) {
-    endBattle("zombie"); // Zombie wins
+    updateMessageBubble(goatMessageElement, "Goat has been defeated!");
+    updateMessageBubble(zombieMessageElement, "Zombie wins!");
+    disableAttacks();
   } else if (zombieHealth <= 0) {
-    endBattle("goat"); // Goat wins
+    updateMessageBubble(goatMessageElement, "Zombie has been defeated!");
+    updateMessageBubble(zombieMessageElement, "Goat wins!");
+    disableAttacks();
   } else {
     setTimeout(function() {
-      Math.random() < 0.5 ? goatAttack() : zombieAttack(); // Randomly choose the attacker for the next turn
-    }, 2000); // Delay between attacks (2 seconds)
+      if (Math.random() < 0.5) {
+        goatAttack();
+      } else {
+        zombieAttack();
+      }
+    }, 1000); // Delay between attacks
   }
 }
 
-// Function to end the battle
-function endBattle(winner) {
-  if (winner === "goat") {
-    updateMessageBubble(goatMessageElement, "YOU WIN!");
-    updateMessageBubble(zombieMessageElement, "Goat triumphs!");
-  } else if (winner === "zombie") {
-    updateMessageBubble(goatMessageElement, "YOU LOSE!");
-    updateMessageBubble(zombieMessageElement, "Zombie wins!");
-  }
+// Function to disable further attacks
+function disableAttacks() {
+  document.getElementById("attack-button").disabled = true;
 }
 
 // Initialize the game
