@@ -188,9 +188,6 @@ function endBattle() {
 
 // Handles the goat's attack
 function goatAttack(attackIndex) {
-  if (isButtonDisabled) return; // Prevent button spamming
-  isButtonDisabled = true; // Disable the button
-
   var attack = goatAttacks[attackIndex];
 
   // Check if the attack hits
@@ -221,14 +218,11 @@ function goatAttack(attackIndex) {
   if (isBattleOver()) {
     endBattle();
   } else {
-    setTimeout(zombieAttack, 1000);
+    // Enable the button for the next attack
+    goatAttackButton.disabled = false;
   }
-
-  // Enable the button for the next attack after a cooldown period
-  setTimeout(function() {
-    isButtonDisabled = false;
-  }, 3000); // 3-second cooldown before the button becomes enabled again
 }
+
 
 // Handles the zombie's attack
 function zombieAttack() {
